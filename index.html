@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LovePaperwork — Virtual Marriage Certificates</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Great+Vibes&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{
+  --cream:#fdf6ec;
+  --parchment:#f5e8cc;
+  --gold:#b8860b;
+  --gold-light:#d4a843;
+  --gold-pale:#f0d890;
+  --red:#8b1a1a;
+  --ink:#2c1810;
+  --ink-light:#5a3a28;
+  --rose:#c4667a;
+  --blush:#fce8ee;
+  --shadow:rgba(44,24,16,0.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'Cormorant Garamond',serif;background:var(--cream);color:var(--ink);overflow-x:hidden;}
+.page{display:none;min-height:100vh;animation:fadeIn 0.7s ease;}
+.page.active{display:flex;flex-direction:column;align-items:center;justify-content:center;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse at 15% 15%,rgba(184,134,11,0.07) 0%,transparent 50%),
+    radial-gradient(ellipse at 85% 85%,rgba(196,102,122,0.08) 0%,transparent 50%);
+}
+
+/* PAGE 1 SETUP */
+#page-setup{background:none;padding:2.5rem 1.5rem;position:relative;z-index:1;}
+.setup-card{
+  background:#fff;border:1px solid var(--gold-pale);border-radius:4px;
+  max-width:560px;width:100%;padding:3rem 3.2rem;
+  box-shadow:0 12px 60px var(--shadow),inset 0 0 0 6px rgba(184,134,11,0.06);
+  position:relative;
+}
+.setup-card::before,.setup-card::after{content:'❧';position:absolute;font-size:2.2rem;color:var(--gold-pale);}
+.setup-card::before{top:12px;left:16px;}
+.setup-card::after{bottom:12px;right:16px;transform:scaleX(-1);}
+.brand{text-align:center;margin-bottom:2.2rem;}
+.brand-icon{font-size:2.4rem;display:block;margin-bottom:0.5rem;}
+.brand h1{font-family:'Cinzel Decorative',serif;font-size:1.55rem;color:var(--gold);letter-spacing:0.04em;line-height:1.3;}
+.brand p{font-style:italic;font-size:1.05rem;color:var(--ink-light);margin-top:0.4rem;}
+.divider-orn{text-align:center;color:var(--gold);font-size:1.1rem;letter-spacing:0.5em;margin:1.2rem 0;opacity:0.7;}
+.form-group{margin-bottom:1.3rem;}
+.form-group label{display:block;font-family:'Cinzel Decorative',serif;font-size:0.65rem;letter-spacing:0.12em;color:var(--gold);text-transform:uppercase;margin-bottom:0.45rem;}
+.form-group input{width:100%;padding:0.7rem 1rem;border:1px solid var(--gold-pale);border-radius:2px;background:var(--cream);font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.form-group input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,134,11,0.1);}
+.form-group input::placeholder{color:#c4b08a;font-style:italic;}
+.form-row{display:flex;gap:1rem;}
+.form-row .form-group{flex:1;}
+textarea.form-input{width:100%;min-height:80px;resize:vertical;padding:0.7rem 1rem;border:1px solid var(--gold-pale);border-radius:2px;background:var(--cream);font-family:'Cormorant Garamond',serif;font-size:1.02rem;color:var(--ink);outline:none;transition:border-color 0.2s;}
+textarea.form-input:focus{border-color:var(--gold);}
+textarea.form-input::placeholder{color:#c4b08a;font-style:italic;}
+.btn{display:inline-block;font-family:'Cinzel Decorative',serif;font-size:0.8rem;letter-spacing:0.1em;border:none;cursor:pointer;padding:0.85rem 2.2rem;border-radius:2px;transition:all 0.2s;text-decoration:none;}
+.btn-gold{background:linear-gradient(135deg,#c9a227,#8b6914);color:#fff;box-shadow:0 4px 20px rgba(139,105,20,0.35);}
+.btn-gold:hover{background:linear-gradient(135deg,#d4b030,#9e7a1a);box-shadow:0 6px 28px rgba(139,105,20,0.45);transform:translateY(-1px);}
+.btn-ghost{background:transparent;color:var(--red);border:1.5px solid var(--red);font-size:0.85rem;}
+.btn-ghost:hover{background:var(--red);color:#fff;}
+.btn-block{width:100%;text-align:center;margin-top:0.5rem;}
+
+/* PAGE 2 SHARE */
+#page-share{padding:2rem 1.5rem;position:relative;z-index:1;}
+.share-card{background:#fff;border:1px solid var(--gold-pale);max-width:540px;width:100%;padding:3rem 3rem 2.8rem;box-shadow:0 12px 60px var(--shadow);text-align:center;position:relative;}
+.share-card h2{font-family:'Cinzel Decorative',serif;font-size:1.2rem;color:var(--gold);margin-bottom:0.6rem;letter-spacing:0.05em;}
+.share-intro{font-style:italic;color:var(--ink-light);font-size:1.1rem;line-height:1.7;margin-bottom:1.8rem;}
+.link-box{background:var(--cream);border:1.5px dashed var(--gold);border-radius:4px;padding:1rem 1.2rem;font-size:0.88rem;color:var(--ink-light);word-break:break-all;letter-spacing:0.02em;margin-bottom:1.4rem;cursor:pointer;transition:background 0.2s;position:relative;}
+.link-box:hover{background:var(--parchment);}
+.copy-hint{font-size:0.78rem;color:var(--gold);margin-top:0.35rem;font-style:italic;}
+.copied-badge{display:none;position:absolute;top:-30px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;font-size:0.75rem;padding:0.25rem 0.8rem;border-radius:20px;font-family:'Cinzel Decorative',serif;letter-spacing:0.08em;}
+.share-note{font-size:0.9rem;color:#9a7a5a;font-style:italic;margin-top:1rem;}
+
+/* PAGE 3 PROPOSAL */
+#page-proposal{padding:2.5rem 1.5rem;position:relative;z-index:1;text-align:center;}
+.proposal-card{background:#fff;border:1px solid var(--gold-pale);max-width:580px;width:100%;padding:3.5rem 3rem;box-shadow:0 16px 70px var(--shadow);position:relative;overflow:hidden;}
+.proposal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--gold),var(--rose),var(--gold));}
+.proposal-hearts{font-size:3.5rem;display:block;animation:heartbeat 2s ease-in-out infinite;margin-bottom:1rem;}
+@keyframes heartbeat{0%,100%{transform:scale(1);}14%{transform:scale(1.18);}28%{transform:scale(1);}42%{transform:scale(1.12);}}
+.proposal-from{font-size:0.78rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);font-family:'Cinzel Decorative',serif;margin-bottom:0.4rem;}
+.proposal-to{font-family:'Great Vibes',cursive;font-size:3rem;color:var(--red);line-height:1.1;margin-bottom:0.2rem;}
+.proposal-divider{margin:1.2rem auto;width:200px;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);}
+.proposal-message{font-style:italic;font-size:1.22rem;line-height:1.75;color:var(--ink-light);margin-bottom:0.8rem;}
+.proposal-question{font-family:'Great Vibes',cursive;font-size:2.5rem;color:var(--red);margin:1.2rem 0 2rem;}
+.proposal-buttons{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;}
+.btn-yes{font-family:'Cinzel Decorative',serif;font-size:0.88rem;letter-spacing:0.1em;background:linear-gradient(135deg,#c9a227,#8b6914);color:#fff;border:none;padding:1rem 2.8rem;border-radius:2px;cursor:pointer;box-shadow:0 6px 24px rgba(139,105,20,0.4);transition:all 0.2s;}
+.btn-yes:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 10px 36px rgba(139,105,20,0.5);}
+.btn-no{font-family:'Cinzel Decorative',serif;font-size:0.88rem;letter-spacing:0.1em;background:transparent;color:#aaa;border:1.5px solid #ddd;padding:1rem 2rem;border-radius:2px;cursor:pointer;transition:all 0.3s;position:relative;}
+
+/* PAGE 4 CERTIFICATE */
+#page-cert{padding:3rem 1.5rem;position:relative;z-index:1;}
+.cert-title-area{text-align:center;margin-bottom:2rem;}
+.cert-title-area h2{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:0.3rem;}
+.cert-title-area p{font-style:italic;color:var(--ink-light);}
+
+#certificate{
+  max-width:760px;width:100%;
+  position:relative;
+  box-shadow:0 20px 80px rgba(44,24,16,0.28),0 4px 16px rgba(44,24,16,0.12);
+  margin:0 auto 2rem;
+  background:#f5e8cc;
+  background-image:linear-gradient(160deg,#f9e8b0 0%,#f0d880 30%,#f5e8cc 60%,#ead090 100%);
+}
+.cert-border-outer{margin:18px;border:3px solid var(--gold);padding:0;position:relative;}
+.cert-border-inner{margin:8px;border:1px solid var(--gold-light);padding:2.8rem 3rem 2.5rem;position:relative;}
+.corner{position:absolute;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:var(--gold);pointer-events:none;}
+.c-tl{top:-2px;left:-2px;}.c-tr{top:-2px;right:-2px;transform:scaleX(-1);}
+.c-bl{bottom:-2px;left:-2px;transform:scaleY(-1);}.c-br{bottom:-2px;right:-2px;transform:scale(-1);}
+.cert-header{text-align:center;margin-bottom:1.6rem;}
+.cert-kingdom{font-family:'Cinzel Decorative',serif;font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;}
+.cert-main-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.4rem,4vw,2.2rem);color:var(--red);letter-spacing:0.06em;text-shadow:1px 1px 0 rgba(139,26,26,0.15);line-height:1.2;margin-bottom:0.2rem;}
+.cert-subtitle{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--gold);letter-spacing:0.12em;}
+.cert-orn-line{display:flex;align-items:center;gap:0.6rem;margin:1.4rem 0;}
+.cert-orn-line span{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);}
+.cert-orn-line em{font-style:normal;color:var(--gold);font-size:1.1rem;}
+.cert-body{text-align:center;}
+.cert-preamble{font-style:italic;font-size:1.08rem;color:var(--ink-light);line-height:1.8;margin-bottom:1rem;}
+.cert-names-row{display:flex;align-items:center;justify-content:center;gap:1.5rem;margin:1.2rem 0;flex-wrap:wrap;}
+.cert-name-col{text-align:center;}
+.cert-name-label{font-family:'Cinzel Decorative',serif;font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem;}
+.cert-name{font-family:'Great Vibes',cursive;font-size:clamp(2rem,5vw,2.8rem);color:var(--red);line-height:1.1;}
+.cert-amp{font-family:'Great Vibes',cursive;font-size:3rem;color:var(--gold);flex-shrink:0;}
+.cert-date-line{font-size:1rem;color:var(--ink-light);margin:1rem 0 0.6rem;line-height:1.8;}
+.cert-date-line strong{color:var(--red);font-style:italic;}
+.cert-personal-message{border-top:1px solid var(--gold-pale);border-bottom:1px solid var(--gold-pale);padding:0.9rem 1.5rem;margin:1rem 0;font-style:italic;font-size:1.08rem;color:var(--ink-light);line-height:1.75;}
+.cert-personal-message::before{content:'\201C';font-size:1.6rem;color:var(--gold);vertical-align:-0.2em;margin-right:0.2rem;}
+.cert-personal-message::after{content:'\201D';font-size:1.6rem;color:var(--gold);vertical-align:-0.2em;margin-left:0.2rem;}
+.cert-footer{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:1.5rem;margin-top:2rem;}
+.cert-sig{text-align:center;}
+.cert-sig-script{font-family:'Great Vibes',cursive;font-size:1.9rem;color:var(--ink);line-height:1;margin-bottom:0.2rem;}
+.cert-sig-line{width:100%;height:1px;background:var(--ink);margin-bottom:0.25rem;opacity:0.4;}
+.cert-sig-label{font-family:'Cinzel Decorative',serif;font-size:0.52rem;letter-spacing:0.15em;color:var(--ink-light);text-transform:uppercase;}
+.cert-seal{text-align:center;display:flex;flex-direction:column;align-items:center;gap:0.2rem;}
+.seal-circle{width:88px;height:88px;border-radius:50%;border:2.5px solid var(--gold);display:flex;align-items:center;justify-content:center;flex-direction:column;background:radial-gradient(circle,rgba(212,168,67,0.15),rgba(184,134,11,0.05));box-shadow:0 0 0 4px rgba(184,134,11,0.12),inset 0 0 0 2px rgba(184,134,11,0.1);font-size:0.5rem;color:var(--gold);letter-spacing:0.12em;text-align:center;font-family:'Cinzel Decorative',serif;line-height:1.5;}
+.seal-icon{font-size:1.8rem;display:block;}
+.cert-reg{text-align:right;font-family:'Cinzel Decorative',serif;font-size:0.5rem;color:var(--gold);letter-spacing:0.12em;line-height:2;}
+.cert-actions{max-width:760px;width:100%;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;}
+
+/* CONFETTI */
+.confetti-piece{position:fixed;width:10px;height:10px;top:-20px;border-radius:50%;pointer-events:none;z-index:9999;animation:confettifall linear forwards;}
+@keyframes confettifall{to{transform:translateY(105vh) rotate(720deg);opacity:0;}}
+
+@media(max-width:600px){
+  .setup-card,.share-card,.proposal-card{padding:2.2rem 1.4rem;}
+  .cert-border-inner{padding:1.8rem 1.4rem 1.6rem;}
+  .cert-footer{grid-template-columns:1fr;text-align:center;}
+  .cert-reg{text-align:center;}
+  .form-row{flex-direction:column;gap:0;}
+  .cert-main-title{font-size:1.3rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 SETUP -->
+<div id="page-setup" class="page active">
+  <div class="setup-card">
+    <div class="brand">
+      <span class="brand-icon">💍</span>
+      <h1>LovePaperwork</h1>
+      <p>Craft a personal marriage proposal &amp; certificate</p>
+    </div>
+    <div class="divider-orn">· ✦ ·</div>
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" id="s-groom" placeholder="e.g. Dawit Bekele" maxlength="50"/>
+    </div>
+    <div class="form-group">
+      <label>Her Name</label>
+      <input type="text" id="s-bride" placeholder="e.g. Hana Solomon" maxlength="50"/>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Wedding Date</label>
+        <input type="date" id="s-date"/>
+      </div>
+      <div class="form-group">
+        <label>Your City / Location</label>
+        <input type="text" id="s-location" placeholder="e.g. Addis Ababa" maxlength="60"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Your Personal Message to Her</label>
+      <textarea class="form-input" id="s-message" placeholder="e.g. From the moment I met you, I knew you were the one my heart had been searching for…" rows="3"></textarea>
+    </div>
+    <div class="divider-orn">· ✦ ·</div>
+    <button class="btn btn-gold btn-block" onclick="generateLink()">✦ Generate My Proposal Link ✦</button>
+  </div>
+</div>
+
+<!-- PAGE 2 SHARE -->
+<div id="page-share" class="page">
+  <div class="share-card">
+    <span style="font-size:2.4rem;display:block;margin-bottom:1rem;">💌</span>
+    <h2>Your Proposal is Ready</h2>
+    <p class="share-intro">
+      Copy the link below and send it to <strong id="share-bride-name">her</strong>.<br>
+      When she opens it, she will receive your proposal.
+    </p>
+    <div class="link-box" onclick="copyLink()" id="link-box">
+      <span id="link-text" style="display:block;user-select:all;"></span>
+      <div class="copy-hint">Click to copy ↑</div>
+      <div class="copied-badge" id="copied-badge">✓ Copied!</div>
+    </div>
+    <div class="share-note">
+      She will see a beautiful proposal page and have the choice to accept — then receive your vintage certificate together.
+    </div>
+    <div style="margin-top:1.8rem;">
+      <button class="btn btn-ghost" onclick="showPage('page-setup')">← Edit Details</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3 PROPOSAL -->
+<div id="page-proposal" class="page">
+  <div class="proposal-card">
+    <span class="proposal-hearts">💕</span>
+    <div class="proposal-from">A heartfelt message from</div>
+    <div class="proposal-to" id="p-groom-name">—</div>
+    <div class="proposal-divider"></div>
+    <p class="proposal-message" id="p-message">From the very first moment, you have been the light of my world…</p>
+    <div class="proposal-question" id="p-question">Will you marry me?</div>
+    <div class="proposal-buttons">
+      <button class="btn-yes" onclick="acceptProposal()">💍 &nbsp; Yes, I Accept</button>
+      <button class="btn-no" id="btn-no" onmouseover="runAway(this)" onclick="noClick(this)">Maybe Not…</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4 CERTIFICATE -->
+<div id="page-cert" class="page">
+  <div class="cert-title-area">
+    <h2>✦ Your Certificate of Marriage ✦</h2>
+    <p>Issued with love — officially sealed and ready to download</p>
+  </div>
+  <div id="certificate">
+    <div class="cert-border-outer">
+      <div class="cert-border-inner">
+        <div class="corner c-tl">✦</div>
+        <div class="corner c-tr">✦</div>
+        <div class="corner c-bl">✦</div>
+        <div class="corner c-br">✦</div>
+        <div class="cert-header">
+          <div class="cert-kingdom">The Kingdom of Love &nbsp;·&nbsp; Est. Since the Beginning of Time</div>
+          <div class="cert-main-title">Certificate of Marriage</div>
+          <div class="cert-subtitle">This document is issued with sincerity &amp; devotion</div>
+        </div>
+        <div class="cert-orn-line"><span></span><em>❧</em><span></span></div>
+        <div class="cert-body">
+          <p class="cert-preamble">
+            Let it be known to all who read these words that on this joyous occasion,<br>
+            the following two souls have pledged their hearts to one another:
+          </p>
+          <div class="cert-names-row">
+            <div class="cert-name-col">
+              <div class="cert-name-label">The Groom</div>
+              <div class="cert-name" id="c-groom">—</div>
+            </div>
+            <div class="cert-amp">&amp;</div>
+            <div class="cert-name-col">
+              <div class="cert-name-label">The Bride</div>
+              <div class="cert-name" id="c-bride">—</div>
+            </div>
+          </div>
+          <div class="cert-orn-line"><span></span><em>♦</em><span></span></div>
+          <p class="cert-date-line">
+            Have been united in love and devotion in the city of <strong id="c-location">—</strong>,<br>
+            on this celebrated day of <strong id="c-date">—</strong>.
+          </p>
+          <div class="cert-personal-message" id="c-message">Forever and always, with all my heart.</div>
+        </div>
+        <div class="cert-footer">
+          <div class="cert-sig">
+            <div class="cert-sig-script" id="c-sig-groom">—</div>
+            <div class="cert-sig-line"></div>
+            <div class="cert-sig-label">Signature of the Groom</div>
+          </div>
+          <div class="cert-seal">
+            <div class="seal-circle">
+              <span class="seal-icon">💍</span>
+              <span>LOVEPAPER<br>WORK</span>
+            </div>
+          </div>
+          <div class="cert-sig">
+            <div class="cert-sig-script" id="c-sig-bride">—</div>
+            <div class="cert-sig-line"></div>
+            <div class="cert-sig-label">Signature of the Bride</div>
+          </div>
+        </div>
+        <div class="cert-orn-line" style="margin-top:1.8rem;"><span></span><em>❧</em><span></span></div>
+        <div class="cert-reg" id="c-reg">CERTIFICATE NO. LP-000000 · LOVEPAPER WORK · OFFICIALLY SEALED</div>
+      </div>
+    </div>
+  </div>
+  <div class="cert-actions">
+    <button class="btn btn-gold" onclick="downloadCert(event)">↓ &nbsp; Download Certificate (PNG)</button>
+    <button class="btn btn-ghost" onclick="shareAgain()">✦ Create Another</button>
+  </div>
+</div>
+
+<script>
+let appData = {};
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg=document.getElementById(id);
+  if(pg)pg.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function encodeData(obj){return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));}
+function decodeData(str){try{return JSON.parse(decodeURIComponent(escape(atob(str))));}catch(e){return null;}}
+
+function generateLink(){
+  const groom=document.getElementById('s-groom').value.trim();
+  const bride=document.getElementById('s-bride').value.trim();
+  const date=document.getElementById('s-date').value;
+  const loc=document.getElementById('s-location').value.trim();
+  const msg=document.getElementById('s-message').value.trim();
+  if(!groom||!bride){alert('Please enter both names to continue.');return;}
+  appData={groom,bride,date,loc,msg};
+  const hash=encodeData(appData);
+  const url=window.location.origin+window.location.pathname+'#proposal='+hash;
+  document.getElementById('share-bride-name').textContent=bride;
+  document.getElementById('link-text').textContent=url;
+  showPage('page-share');
+}
+
+function copyLink(){
+  const url=document.getElementById('link-text').textContent;
+  navigator.clipboard.writeText(url).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+  });
+  const badge=document.getElementById('copied-badge');
+  badge.style.display='block';
+  setTimeout(()=>badge.style.display='none',2200);
+}
+
+function loadFromHash(){
+  const hash=window.location.hash;
+  if(!hash.startsWith('#proposal='))return false;
+  const encoded=hash.replace('#proposal=','');
+  const data=decodeData(encoded);
+  if(!data)return false;
+  appData=data;
+  document.getElementById('p-groom-name').textContent=data.groom;
+  document.getElementById('p-question').textContent='Will you marry me, '+data.bride+'?';
+  document.getElementById('p-message').textContent=data.msg||'From the very first moment I saw you, every single day has felt like a gift. You are my home, my heart, and my greatest adventure.';
+  showPage('page-proposal');
+  return true;
+}
+
+let noMoves=0;
+function runAway(btn){
+  if(noMoves>7){btn.style.display='none';return;}
+  const x=(Math.random()-0.5)*260;
+  const y=(Math.random()-0.5)*160;
+  btn.style.transform='translate('+x+'px,'+y+'px) rotate('+((Math.random()-0.5)*30)+'deg)';
+  noMoves++;
+}
+function noClick(btn){
+  btn.style.transform='translate('+((Math.random()-0.5)*400)+'px,'+(220+Math.random()*200)+'px) scale(0)';
+  btn.style.opacity='0';
+}
+
+function acceptProposal(){
+  launchConfetti();
+  setTimeout(()=>{populateCertificate();showPage('page-cert');},900);
+}
+
+function populateCertificate(){
+  const{groom,bride,date,loc,msg}=appData;
+  document.getElementById('c-groom').textContent=groom||'—';
+  document.getElementById('c-bride').textContent=bride||'—';
+  document.getElementById('c-sig-groom').textContent=groom||'—';
+  document.getElementById('c-sig-bride').textContent=bride||'—';
+  document.getElementById('c-location').textContent=loc||'an enchanted place';
+  document.getElementById('c-message').textContent=msg||'Forever and always, with all my heart.';
+  let dateDisplay='—';
+  if(date){const d=new Date(date+'T00:00:00');dateDisplay=d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});}
+  document.getElementById('c-date').textContent=dateDisplay;
+  const certNum='LP-'+Math.floor(100000+Math.random()*900000);
+  document.getElementById('c-reg').textContent='CERTIFICATE NO. '+certNum+'  ·  LOVEPAPER WORK  ·  OFFICIALLY SEALED';
+}
+
+function downloadCert(e){
+  const btn=e.target;
+  btn.textContent='⏳  Preparing your certificate…';
+  btn.disabled=true;
+  const cert=document.getElementById('certificate');
+  html2canvas(cert,{scale:3,useCORS:true,backgroundColor:null,logging:false,allowTaint:true}).then(canvas=>{
+    const link=document.createElement('a');
+    const g=(appData.groom||'Groom').replace(/\s+/g,'_');
+    const b=(appData.bride||'Bride').replace(/\s+/g,'_');
+    link.download='LovePaperwork_'+g+'_'+b+'.png';
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+    btn.textContent='↓  Download Certificate (PNG)';
+    btn.disabled=false;
+  }).catch(()=>{
+    alert('Could not generate image. Please try again.');
+    btn.textContent='↓  Download Certificate (PNG)';
+    btn.disabled=false;
+  });
+}
+
+function shareAgain(){window.location.hash='';location.reload();}
+
+function launchConfetti(){
+  const colors=['#c9a227','#e0006b','#8b1a1a','#f0d890','#c4667a','#fff','#d4a843'];
+  for(let i=0;i<90;i++){
+    const el=document.createElement('div');
+    el.className='confetti-piece';
+    el.style.left=Math.random()*100+'vw';
+    el.style.background=colors[Math.floor(Math.random()*colors.length)];
+    el.style.width=el.style.height=(6+Math.random()*10)+'px';
+    el.style.borderRadius=Math.random()>0.5?'50%':'2px';
+    el.style.animationDuration=(1.5+Math.random()*2.5)+'s';
+    el.style.animationDelay=Math.random()*0.6+'s';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),4000);
+  }
+}
+
+window.addEventListener('load',()=>{
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('s-date').value=today;
+  if(!loadFromHash())showPage('page-setup');
+});
+window.addEventListener('hashchange',()=>{if(!loadFromHash())showPage('page-setup');});
+</script>
+</body>
+</html>
